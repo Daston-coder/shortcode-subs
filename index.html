@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Earnex_Access</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="https://www.safaricom.co.ke/images/icons/mobile-logo.svg"/>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+    <style>
+        #css_confirm_sub {
+            /* CSS empty */
+        }
+
+        .max-width-1024 {
+            max-width: 1024px;
+        }
+
+        .adjst-box {
+            @media (min-width: 768px) {
+                padding-top: 2.5rem !important;
+            }
+
+            input:focus {
+                outline: none;
+            }
+
+            html {
+                font-family: "Noto Sans", arial, sans-seriif;
+            }
+        }
+    </style>
+
+    <script>
+        function onLoad() {
+            var errorMessage = document.getElementById("errorMessage").innerText;
+            var errorMessageContainer = document.getElementById("error_page");
+            if (errorMessage.length === 0) {
+                errorMessageContainer.style.display = 'none';
+            }
+        }
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const keyword = "STOP ACCESS";
+            const el = document.getElementById("unsubscribeText");
+            if (el && (!keyword || keyword.trim() === "")) {
+                el.style.display = "none";
+            }
+        });
+    </script>
+    
+    
+    
+    <script type="application/javascript"
+    data-cg_id="706c1456-d3bb-4c4e-9672-2e94bc984977"
+    data-cp_id="192"
+    data-cp_name="Weiserstamm"
+    data-offer_code="300003151"
+    data-offer_name="Earnex_Access"
+    data-msisdn="">
+</script>
+
+    
+
+</head>
+<body onload="onLoad()" style="background-color: white" class="flex flex-col justify-between min-h-screen">
+
+<!-- logo -->
+<div class="flex justify-left">
+    <img style="width: 100px;" src="https://www.logo.wine/a/logo/Safaricom/Safaricom-Logo.wine.svg" alt="safaricom">
+</div>
+
+<div class="md:flex-1 flex justify-center adjst-box items-center md:p-8">
+    <div class=" max-width-1024">
+
+        <div class="grid md:grid-cols-2 gap-4 items-center">
+            <div class="flex justify-center items-center ">
+                <img src="" alt="Main image"
+                     class="md:rounded-r-lg md:rounded-l-lg max-w-full h-auto min-w-full">
+            </div>
+            <div class="flex flex-col justify-between px-8 pb-8  pt-4">
+                <div class="text-center">
+                    <form action="https://dsdp-cg.safaricom.com/300003151/otp?t=706c1456-d3bb-4c4e-9672-2e94bc984977" method="POST">
+                        <h2 class=" font-bold mb-1 text-sm md:p-2 " style="color:#52b44b"><b>Enter your phone number to join Earnex_Access now!</b></h2>
+                        <p class="mb-2 p-2 text-xs " style="color:#52b44b"><b>Ksh0.00 to subscribe and Ksh15.00/day to renew service</b></p>
+                        <p class="mb-2 p-2 text-xs " style="color:#52b44b"><b>Educational digital content</b></p>
+
+                        <div>
+                            <div class="flex items-center space-x-4 mb-4">
+                                <input type="tel" required name="msisdnOtp" id="msisdnOtp" pattern=".{9,12}"
+                                       title="Error: Invalid format." value=""
+                                       placeholder="Phone format: 254000000000" class=" rounded-md p-2 w-full"
+                                       style="border: 1px solid #D1D5DB;">
+                                <input id="get_otp_id" type="submit" value="Get PIN"
+                                       class="rounded-full py-2  w-1/3" style="background-color:#52b44b;color:white;font-weight: bold;"/>
+                            </div>
+                        </div>
+                    </form>
+
+                    <form id="post-form" action="https://dsdp-cg.safaricom.com/300003151/sub?t=706c1456-d3bb-4c4e-9672-2e94bc984977" method="POST">
+                        <div class="mb-2" style="display: flex; justify-content: space-between;">
+                            <input id="scienlabs_id" type="hidden" name="scienlabs_id">
+                            <input type="hidden" name="msisdnOtp" value="">
+                            <input type="text" inputmode="numeric" autocomplete="one-time-code"
+                                   pattern="\d{6}" required name="otp" id="otp" style="margin-right: 1em;"
+                                   placeholder="Enter PIN"
+                                   class="border border-gray-300 rounded-md p-2 flex-grow w-1/4">
+                            <button id="css_confirm_sub" type="submit" value="confirm" style="background-color:#52b44b;color:white"
+                                    class="rounded-full py-2 px-6 w-2/3"><b>CONFIRM</b></button>
+                        </div>
+                        <p id="unsubscribeText" class="mb-2 p-2 text-xs " style="color:#52b44b">Cancel anytime by
+                            sending ´<b>STOP ACCESS</b>´ to "<b>27039</b>"</p>
+                    </form>
+                </div>
+            </div>
+            <div id="error_page" style="color:red;">
+                <div class="flex justify-center items-center"
+                     style="padding-top: 3px; margin-left: 20px; margin-right: 20px;">
+                    <span id="errorMessage" class="font-bold mb-1 text-sm md:p-2"
+                          style="color:red;"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+
+</html>
