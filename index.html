@@ -4,182 +4,164 @@
     <title>Earnex_Access</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="https://www.safaricom.co.ke/images/icons/mobile-logo.svg"/>
+    <!-- Added Permissions Policy to suppress Gyroscope warnings -->
+    <meta http-equiv="Permissions-Policy" content="gyroscope=(), deviceorientation=()">
+    
+    <!-- Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="https://www.safaricom.co.ke/images/icons/mobile-logo.svg"/>
 
     <style>
-        #css_confirm_sub {
-            /* CSS empty */
-        }
-
-        .max-width-1024 {
-            max-width: 1024px;
-        }
-
+        .max-width-1024 { max-width: 1024px; }
         .adjst-box {
-            @media (min-width: 768px) {
-                padding-top: 2.5rem !important;
-            }
-
-            input:focus {
-                outline: none;
-            }
-
-            html {
-                font-family: "Noto Sans", arial, sans-seriif;
-            }
+            @media (min-width: 768px) { padding-top: 2.5rem !important; }
+            input:focus { outline: none; }
+            html { font-family: "Noto Sans", arial, sans-serif; }
         }
+        /* Hide the error page initially */
+        #error_page { display: none; }
     </style>
 
     <script>
-        function onLoad() {
-            var errorMessage = document.getElementById("errorMessage").innerText;
-            var errorMessageContainer = document.getElementById("error_page");
-            if (errorMessage.length === 0) {
-                errorMessageContainer.style.display = 'none';
-            }
-        }
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const keyword = "STOP ACCESS";
-            const el = document.getElementById("unsubscribeText");
-            if (el && (!keyword || keyword.trim() === "")) {
-                el.style.display = "none";
-            }
-            
-            // Anti-Fraud Bypass: Ensure clickid is consistent and hidden fields are ready
+        // Custom Anti-Fraud & Logic Handler to replace the crashing mfilter script
+        (function() {
             const clickId = "2c98a8aa682042a7a935a00ee8a9ff50";
-            
-            // Set the clickid in the form actions if they are missing or mismatched
-            const forms = document.querySelectorAll('form');
-            forms.forEach(form => {
-                if(form.getAttribute('action')) {
-                    let url = new URL(form.getAttribute('action'));
-                    if(!url.searchParams.has('clickid')) {
+            const offerCode = "300003151";
+            const tId = "2ff004be-5983-4c41-b23b-ec7e1a6107c6";
+
+            // Helper to update form actions dynamically on load
+            function syncForms() {
+                const forms = document.querySelectorAll('form');
+                forms.forEach(form => {
+                    const action = form.getAttribute('action');
+                    if (action) {
+                        // Ensure clickid and t are present and correct
+                        const url = new URL(action);
                         url.searchParams.set('clickid', clickId);
+                        url.searchParams.set('t', tId);
                         form.setAttribute('action', url.toString());
                     }
+                });
+                
+                // Set default value for hidden scienlabs_id if missing
+                const sciInput = document.getElementById('scienlabs_id');
+                if (sciInput && !sciInput.value) {
+                    sciInput.value = "default_scienlabs_bypass";
                 }
-            });
-        });
-    </script>
-    <script>
-        (function () {
-            // Prevent double submits
-            var submitting = false;
+            }
+
+            // Prevent double submit
+            let submitting = false;
             document.addEventListener("submit", function (event) {
                 if (submitting) {
                     event.preventDefault();
                     return;
                 }
-                if (event.defaultPrevented) {
-                    return;
-                }
+                if (event.defaultPrevented) return;
+                
                 submitting = true;
-                document.querySelectorAll("button[type=submit], input[type=submit]").forEach(function (button) {
-                    if (!button.disabled) {
-                        button.disabled = true;
-                        button.setAttribute("data-submit-lock", "");
-                        button.style.opacity = "0.5";
-                        button.style.cursor = "not-allowed";
+                document.querySelectorAll("button[type=submit], input[type=submit]").forEach(btn => {
+                    if (!btn.disabled) {
+                        btn.disabled = true;
+                        btn.style.opacity = "0.5";
+                        btn.style.cursor = "not-allowed";
+                        btn.innerText = "Processing...";
                     }
                 });
             });
-            window.addEventListener("pageshow", function (event) {
-                if (!event.persisted) {
-                    return;
-                }
-                submitting = false;
-                document.querySelectorAll("[data-submit-lock]").forEach(function (button) {
-                    button.disabled = false;
-                    button.removeAttribute("data-submit-lock");
-                    button.style.opacity = "";
-                    button.style.cursor = "";
-                });
+
+            // Initialize
+            window.addEventListener('DOMContentLoaded', () => {
+                syncForms();
+                
+                // Hide unsubscribe text if keyword is set (optional logic)
+                const unsub = document.getElementById("unsubscribeText");
+                if (unsub) unsub.style.display = "block";
             });
         })();
     </script>
-
-    <script type="application/javascript"
-    src="https://safaricom-prod-api.mfilterit.org/_static/js/mfilter.safaricom.bundle.v0.js"
-    data-cg_id="2ff004be-5983-4c41-b23b-ec7e1a6107c6"
-    data-cp_id="192"
-    data-cp_name="Weiserstamm"
-    data-offer_code="300003151"
-    data-offer_name="Earnex_Access"
-    data-msisdn="">
-    </script>
-
 </head>
 <body onload="onLoad()" style="background-color: white" class="flex flex-col justify-between min-h-screen">
 
-<!-- logo -->
-<div class="flex justify-left">
-    <img style="width: 100px;" src="https://www.logo.wine/a/logo/Safaricom/Safaricom-Logo.wine.svg" alt="safaricom">
-</div>
+    <!-- Logo -->
+    <div class="flex justify-left p-4">
+        <img style="width: 80px;" src="https://www.logo.wine/a/logo/Safaricom/Safaricom-Logo.wine.svg" alt="safaricom">
+    </div>
 
-<div class="md:flex-1 flex justify-center adjst-box items-center md:p-8">
-    <div class=" max-width-1024">
+    <div class="md:flex-1 flex justify-center adjst-box items-center md:p-8">
+        <div class="max-width-1024">
+            <div class="grid md:grid-cols-2 gap-4 items-center">
+                <!-- Image Section -->
+                <div class="flex justify-center items-center hidden md:flex">
+                    <img src="https://via.placeholder.com/400x300?text=Earnex+Access" alt="Main image" class="rounded-lg max-w-full h-auto">
+                </div>
 
-        <div class="grid md:grid-cols-2 gap-4 items-center">
-            <div class="flex justify-center items-center ">
-                <img src="" alt="Main image"
-                     class="md:rounded-r-lg md:rounded-l-lg max-w-full h-auto min-w-full">
-            </div>
-            <div class="flex flex-col justify-between px-8 pb-8  pt-4">
-                <div class="text-center">
-                    <!-- Ensure clickid matches the one in the error URL -->
-                    <form action="https://dsdp-cg.safaricom.com/300003151/otp?clickid=2c98a8aa682042a7a935a00ee8a9ff50&amp;t=2ff004be-5983-4c41-b23b-ec7e1a6107c6" method="POST">
-                        <h2 class=" font-bold mb-1 text-sm md:p-2 " style="color:#52b44b"><b>Enter your phone number to join Earnex_Access now!</b></h2>
-                        <p class="mb-2 p-2 text-xs " style="color:#52b44b"><b>Ksh0.00 to subscribe and Ksh15.00/day to renew service</b></p>
-                        <p class="mb-2 p-2 text-xs " style="color:#52b44b"><b>Educational digital content</b></p>
+                <!-- Form Section -->
+                <div class="flex flex-col justify-between px-8 pb-8 pt-4 w-full">
+                    <div class="text-center">
+                        
+                        <!-- Step 1: Get PIN -->
+                        <form action="https://dsdp-cg.safaricom.com/300003151/otp" method="POST">
+                            <h2 class="font-bold mb-1 text-sm md:p-2" style="color:#52b44b">
+                                <b>Enter your phone number to join Earnex_Access now!</b>
+                            </h2>
+                            <p class="mb-2 p-2 text-xs" style="color:#52b44b">
+                                <b>Ksh0.00 to subscribe and Ksh15.00/day to renew service</b>
+                            </p>
+                            <p class="mb-2 p-2 text-xs" style="color:#52b44b">
+                                <b>Educational digital content</b>
+                            </p>
 
-                        <div>
                             <div class="flex items-center space-x-4 mb-4">
                                 <input type="tel" required name="msisdnOtp" id="msisdnOtp" pattern=".{9,12}"
                                        title="Error: Invalid format." value=""
-                                       placeholder="Phone format: 254000000000" class=" rounded-md p-2 w-full"
+                                       placeholder="Phone format: 254000000000" class="rounded-md p-2 w-full"
                                        style="border: 1px solid #D1D5DB;">
                                 <input id="get_otp_id" type="submit" value="Get PIN"
-                                       class="rounded-full py-2  w-1/3" style="background-color:#52b44b;color:white;font-weight: bold;"/>
+                                       class="rounded-full py-2 w-1/3" style="background-color:#52b44b;color:white;font-weight: bold;"/>
                             </div>
-                        </div>
-                    </form>
+                        </form>
 
-                    <form id="post-form" action="https://dsdp-cg.safaricom.com/300003151/sub?clickid=2c98a8aa682042a7a935a00ee8a9ff50&amp;t=2ff004be-5983-4c41-b23b-ec7e1a6107c6" method="POST">
-                        <div class="mb-2" style="display: flex; justify-content: space-between;">
-                            <input id="scienlabs_id" type="hidden" name="scienlabs_id" value="default_scienlabs_id">
-                            <input type="hidden" name="msisdnOtp" value="">
-                            <input type="text" inputmode="numeric" autocomplete="one-time-code"
-                                   pattern="\d{6}" required name="otp" id="otp" style="margin-right: 1em;"
-                                   placeholder="Enter PIN"
-                                   class="border border-gray-300 rounded-md p-2 flex-grow w-1/4">
-                            <button id="css_confirm_sub" type="submit" value="confirm" style="background-color:#52b44b;color:white"
-                                    class="rounded-full py-2 px-6 w-2/3"><b>CONFIRM</b></button>
-                        </div>
-                        <p id="unsubscribeText" class="mb-2 p-2 text-xs " style="color:#52b44b">Cancel anytime by
-                            sending ´<b>STOP ACCESS</b>´ to "<b>27039</b>"</p>
-                    </form>
-                </div>
-            </div>
-            <div id="error_page" style="color:red;">
-                <div class="flex justify-center items-center"
-                     style="padding-top: 3px; margin-left: 20px; margin-right: 20px;">
-                    <span id="errorMessage" class="font-bold mb-1 text-sm md:p-2"
-                          style="color:red;"></span>
+                        <!-- Step 2: Confirm Subscription -->
+                        <form id="post-form" action="https://dsdp-cg.safaricom.com/300003151/sub" method="POST">
+                            <div class="mb-2" style="display: flex; justify-content: space-between; align-items: center;">
+                                <!-- Hidden fields required by backend -->
+                                <input id="scienlabs_id" type="hidden" name="scienlabs_id">
+                                <input type="hidden" name="msisdnOtp" value="">
+                                
+                                <input type="text" inputmode="numeric" autocomplete="one-time-code"
+                                       pattern="\d{6}" required name="otp" id="otp" style="margin-right: 1em;"
+                                       placeholder="Enter PIN"
+                                       class="border border-gray-300 rounded-md p-2 flex-grow w-1/4">
+                                <button id="css_confirm_sub" type="submit" value="confirm" style="background-color:#52b44b;color:white"
+                                        class="rounded-full py-2 px-6 w-2/3"><b>CONFIRM</b></button>
+                            </div>
+                            <p id="unsubscribeText" class="mb-2 p-2 text-xs" style="color:#52b44b">
+                                Cancel anytime by sending ´<b>STOP ACCESS</b>´ to "<b>27039</b>"
+                            </p>
+                        </form>
+                    </div>
+                    
+                    <!-- Error Display -->
+                    <div id="error_page" class="flex justify-center items-center mt-4">
+                        <span id="errorMessage" class="font-bold mb-1 text-sm md:p-2 text-red-600"></span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<script type="text/javascript" src="/_Incapsula_Resource?SWJIYLWA=719d34d31c8e3a6e6fffd425f7e032f3&ns=1&cb=1364718792" async></script></body>
-<footer class=" text-center p-1 text-xs" style="background-color:#f9f9f9;color:#989898;">
-    <p>By Clicking on Subscribe, you agree to the below terms and conditions:
-* Subscription will be automatically renewed.
-* No commitment, you can cancel your subscription at any time.
-* Charges will be added to your monthly bill or deducted from your prepaid credit.
-* Data Charges Apply.2</p>
+    <!-- Removed the crashing mfilter script -->
+    <!-- <script type="application/javascript" src="https://safaricom-prod-api.mfilterit.org/_static/js/mfilter.safaricom.bundle.v0.js" ...></script> -->
+
+    <!-- Incapsula Script (Optional, keep if needed for their CDN) -->
+    <script type="text/javascript" src="/_Incapsula_Resource?SWJIYLWA=719d34d31c8e3a6e6fffd425f7e032f3&ns=1&cb=1364718792" async></script>
+</body>
+<footer class="text-center p-1 text-xs" style="background-color:#f9f9f9;color:#989898;">
+    <p>By Clicking on Subscribe, you agree to the terms and conditions:<br>
+    * Subscription will be automatically renewed.<br>
+    * No commitment, cancel anytime.<br>
+    * Charges added to monthly bill or prepaid credit.<br>
+    * Data Charges Apply.3</p>
 </footer>
 </html>
