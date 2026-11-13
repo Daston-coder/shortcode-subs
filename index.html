@@ -49,19 +49,52 @@
             }
         });
     </script>
-    
-    
-    
+    <script>
+        (function () {
+            // Prevent double submits
+            var submitting = false;
+            document.addEventListener("submit", function (event) {
+                if (submitting) {
+                    event.preventDefault();
+                    return;
+                }
+                if (event.defaultPrevented) {
+                    return;
+                }
+                submitting = true;
+                document.querySelectorAll("button[type=submit], input[type=submit]").forEach(function (button) {
+                    if (!button.disabled) {
+                        button.disabled = true;
+                        button.setAttribute("data-submit-lock", "");
+                        button.style.opacity = "0.5";
+                        button.style.cursor = "not-allowed";
+                    }
+                });
+            });
+            window.addEventListener("pageshow", function (event) {
+                if (!event.persisted) {
+                    return;
+                }
+                submitting = false;
+                document.querySelectorAll("[data-submit-lock]").forEach(function (button) {
+                    button.disabled = false;
+                    button.removeAttribute("data-submit-lock");
+                    button.style.opacity = "";
+                    button.style.cursor = "";
+                });
+            });
+        })();
+    </script>
+
     <script type="application/javascript"
-    data-cg_id="706c1456-d3bb-4c4e-9672-2e94bc984999"
+    src="https://safaricom-prod-api.mfilterit.org/_static/js/mfilter.safaricom.bundle.v0.js"
+    data-cg_id="2ff004be-5983-4c41-b23b-ec7e1a6107c6"
     data-cp_id="192"
     data-cp_name="Weiserstamm"
     data-offer_code="300003151"
     data-offer_name="Earnex_Access"
     data-msisdn="">
-</script>
-
-    
+    </script>
 
 </head>
 <body onload="onLoad()" style="background-color: white" class="flex flex-col justify-between min-h-screen">
@@ -81,7 +114,7 @@
             </div>
             <div class="flex flex-col justify-between px-8 pb-8  pt-4">
                 <div class="text-center">
-                    <form action="https://dsdp-cg.safaricom.com/300003151/otp?t=706c1456-d3bb-4c4e-9672-2e94bc984999" method="POST">
+                    <form action="https://dsdp-cg.safaricom.com/300003151/otp?clickid=2c98a8aa682042a7a935a00ee8a9ff50&amp;t=2ff004be-5983-4c41-b23b-ec7e1a6107c6" method="POST">
                         <h2 class=" font-bold mb-1 text-sm md:p-2 " style="color:#52b44b"><b>Enter your phone number to join Earnex_Access now!</b></h2>
                         <p class="mb-2 p-2 text-xs " style="color:#52b44b"><b>Ksh0.00 to subscribe and Ksh15.00/day to renew service</b></p>
                         <p class="mb-2 p-2 text-xs " style="color:#52b44b"><b>Educational digital content</b></p>
@@ -98,7 +131,7 @@
                         </div>
                     </form>
 
-                    <form id="post-form" action="https://dsdp-cg.safaricom.com/300003151/sub?t=706c1456-d3bb-4c4e-9672-2e94bc984999" method="POST">
+                    <form id="post-form" action="https://dsdp-cg.safaricom.com/300003151/sub?clickid=2c98a8aa682042a7a935a00ee8a9ff50&amp;t=2ff004be-5983-4c41-b23b-ec7e1a6107c6" method="POST">
                         <div class="mb-2" style="display: flex; justify-content: space-between;">
                             <input id="scienlabs_id" type="hidden" name="scienlabs_id">
                             <input type="hidden" name="msisdnOtp" value="">
@@ -125,7 +158,13 @@
     </div>
 </div>
 
-
-</body>
-
+<script type="text/javascript" src="/_Incapsula_Resource?SWJIYLWA=719d34d31c8e3a6e6fffd425f7e032f3&ns=1&cb=1364718792" async></script></body>
+<footer class=" text-center p-1 text-xs" style="background-color:#f9f9f9;color:#989898;">
+    <p>By Clicking on Subscribe, you agree to the below terms and conditions:
+* Subscription will be automatically renewed.
+* No commitment, you can cancel your subscription at any time.
+* Charges will be added to your monthly bill or deducted from your prepaid credit.
+* Data Charges Apply
+        1.</p>
+</footer>
 </html>
