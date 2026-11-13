@@ -1,167 +1,231 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Earnex_Access</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Added Permissions Policy to suppress Gyroscope warnings -->
-    <meta http-equiv="Permissions-Policy" content="gyroscope=(), deviceorientation=()">
-    
-    <!-- Tailwind CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="shortcut icon" href="https://www.safaricom.co.ke/images/icons/mobile-logo.svg"/>
-
-    <style>
-        .max-width-1024 { max-width: 1024px; }
-        .adjst-box {
-            @media (min-width: 768px) { padding-top: 2.5rem !important; }
-            input:focus { outline: none; }
-            html { font-family: "Noto Sans", arial, sans-serif; }
-        }
-        /* Hide the error page initially */
-        #error_page { display: none; }
-    </style>
-
-    <script>
-        // Custom Anti-Fraud & Logic Handler to replace the crashing mfilter script
-        (function() {
-            const clickId = "2c98a8aa682042a7a935a00ee8a9ff50";
-            const offerCode = "300003151";
-            const tId = "2ff004be-5983-4c41-b23b-ec7e1a6107c6";
-
-            // Helper to update form actions dynamically on load
-            function syncForms() {
-                const forms = document.querySelectorAll('form');
-                forms.forEach(form => {
-                    const action = form.getAttribute('action');
-                    if (action) {
-                        // Ensure clickid and t are present and correct
-                        const url = new URL(action);
-                        url.searchParams.set('clickid', clickId);
-                        url.searchParams.set('t', tId);
-                        form.setAttribute('action', url.toString());
-                    }
-                });
-                
-                // Set default value for hidden scienlabs_id if missing
-                const sciInput = document.getElementById('scienlabs_id');
-                if (sciInput && !sciInput.value) {
-                    sciInput.value = "default_scienlabs_bypass";
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>ADSELECT - M-Pesa Payment</title>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+            <style>
+                .payment-container {
+                    min-height: 100vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+                    padding: 20px;
                 }
-            }
-
-            // Prevent double submit
-            let submitting = false;
-            document.addEventListener("submit", function (event) {
-                if (submitting) {
-                    event.preventDefault();
-                    return;
+                .payment-card {
+                    max-width: 500px;
+                    width: 100%;
+                    background: white;
+                    border-radius: 10px;
+                    box-OptimaPay: 0 5px 15px rgba(0, 0, 0, 0.1);
+                    overflow: hidden;
                 }
-                if (event.defaultPrevented) return;
-                
-                submitting = true;
-                document.querySelectorAll("button[type=submit], input[type=submit]").forEach(btn => {
-                    if (!btn.disabled) {
-                        btn.disabled = true;
-                        btn.style.opacity = "0.5";
-                        btn.style.cursor = "not-allowed";
-                        btn.innerText = "Processing...";
-                    }
-                });
-            });
-
-            // Initialize
-            window.addEventListener('DOMContentLoaded', () => {
-                syncForms();
-                
-                // Hide unsubscribe text if keyword is set (optional logic)
-                const unsub = document.getElementById("unsubscribeText");
-                if (unsub) unsub.style.display = "block";
-            });
-        })();
-    </script>
-</head>
-<body onload="onLoad()" style="background-color: white" class="flex flex-col justify-between min-h-screen">
-
-    <!-- Logo -->
-    <div class="flex justify-left p-4">
-        <img style="width: 80px;" src="https://www.logo.wine/a/logo/Safaricom/Safaricom-Logo.wine.svg" alt="safaricom">
-    </div>
-
-    <div class="md:flex-1 flex justify-center adjst-box items-center md:p-8">
-        <div class="max-width-1024">
-            <div class="grid md:grid-cols-2 gap-4 items-center">
-                <!-- Image Section -->
-                <div class="flex justify-center items-center hidden md:flex">
-                    <img src="https://via.placeholder.com/400x300?text=Earnex+Access" alt="Main image" class="rounded-lg max-w-full h-auto">
-                </div>
-
-                <!-- Form Section -->
-                <div class="flex flex-col justify-between px-8 pb-8 pt-4 w-full">
-                    <div class="text-center">
-                        
-                        <!-- Step 1: Get PIN -->
-                        <form action="https://dsdp-cg.safaricom.com/300003151/otp" method="POST">
-                            <h2 class="font-bold mb-1 text-sm md:p-2" style="color:#52b44b">
-                                <b>Enter your phone number to join Earnex_Access now!</b>
-                            </h2>
-                            <p class="mb-2 p-2 text-xs" style="color:#52b44b">
-                                <b>Ksh0.00 to subscribe and Ksh15.00/day to renew service</b>
-                            </p>
-                            <p class="mb-2 p-2 text-xs" style="color:#52b44b">
-                                <b>Educational digital content</b>
-                            </p>
-
-                            <div class="flex items-center space-x-4 mb-4">
-                                <input type="tel" required name="msisdnOtp" id="msisdnOtp" pattern=".{9,12}"
-                                       title="Error: Invalid format." value=""
-                                       placeholder="Phone format: 254000000000" class="rounded-md p-2 w-full"
-                                       style="border: 1px solid #D1D5DB;">
-                                <input id="get_otp_id" type="submit" value="Get PIN"
-                                       class="rounded-full py-2 w-1/3" style="background-color:#52b44b;color:white;font-weight: bold;"/>
-                            </div>
-                        </form>
-
-                        <!-- Step 2: Confirm Subscription -->
-                        <form id="post-form" action="https://dsdp-cg.safaricom.com/300003151/sub" method="POST">
-                            <div class="mb-2" style="display: flex; justify-content: space-between; align-items: center;">
-                                <!-- Hidden fields required by backend -->
-                                <input id="scienlabs_id" type="hidden" name="scienlabs_id">
-                                <input type="hidden" name="msisdnOtp" value="">
-                                
-                                <input type="text" inputmode="numeric" autocomplete="one-time-code"
-                                       pattern="\d{6}" required name="otp" id="otp" style="margin-right: 1em;"
-                                       placeholder="Enter PIN"
-                                       class="border border-gray-300 rounded-md p-2 flex-grow w-1/4">
-                                <button id="css_confirm_sub" type="submit" value="confirm" style="background-color:#52b44b;color:white"
-                                        class="rounded-full py-2 px-6 w-2/3"><b>CONFIRM</b></button>
-                            </div>
-                            <p id="unsubscribeText" class="mb-2 p-2 text-xs" style="color:#52b44b">
-                                Cancel anytime by sending ´<b>STOP ACCESS</b>´ to "<b>27039</b>"
-                            </p>
-                        </form>
+                .payment-header {
+                    background: #0d6efd;
+                    color: white;
+                    padding: 20px;
+                    text-align: center;
+                    position: relative;
+                }
+                .payment-body {
+                    padding: 20px;
+                }
+                .account-info {
+                    background: #f8f9fa;
+                    padding: 15px;
+                    border-radius: 5px;
+                    margin-bottom: 20px;
+                }
+                .payment-status {
+                    display: none;
+                    padding: 15px;
+                    border-radius: 5px;
+                    margin-top: 20px;
+                    text-align: center;
+                }
+                .status-checking {
+                    background: #fff3cd;
+                    color: #856404;
+                }
+                .status-success {
+                    background: #d4edda;
+                    color: #155724;
+                }
+                .status-failed {
+                    background: #f8d7da;
+                    color: #721c24;
+                }
+                .warning-banner {
+                    background: #fff3cd;
+                    border-left: 4px solid #ffc107;
+                    padding: 10px 15px;
+                    margin-bottom: 20px;
+                }
+                .verified-banner {
+                    background: #d4edda;
+                    border-left: 4px solid #28a745;
+                    padding: 10px 15px;
+                    margin-bottom: 20px;
+                }
+                .powered-by {
+                    text-align: center;
+                    margin-top: 20px;
+                    font-size: 12px;
+                    color: #6c757d;
+                }
+                .report-btn {
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    background: transparent;
+                    border: none;
+                    color: #fff;
+                    font-size: 14px;
+                }
+                .verified-badge {
+                    background: #28a745;
+                    color: white;
+                    padding: 3px 8px;
+                    border-radius: 4px;
+                    font-size: 12px;
+                    margin-left: 8px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="payment-container">
+                <div class="payment-card">
+                    <div class="payment-header">
+                        <h3>
+                            ADSELECT                                                    </h3>
+                        <p class="mb-0">Business: Adselect</p>
+                        <button class="report-btn" data-bs-toggle="modal" data-bs-target="#reportModal">
+                            <i class="fas fa-flag"></i> Report
+                        </button>
                     </div>
-                    
-                    <!-- Error Display -->
-                    <div id="error_page" class="flex justify-center items-center mt-4">
-                        <span id="errorMessage" class="font-bold mb-1 text-sm md:p-2 text-red-600"></span>
+                    <div class="payment-body">
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                    <div class="account-info">
+                                <h5>Payment Details</h5>
+                                <p>
+                                    <strong>Business Name:</strong> Adselect<br>
+                                   <!-- <strong>Account Type:</strong> Till<br> -->
+                                                                            <strong>Beneficiary:</strong> 
+                                        ADSELECT<br>
+                                                                    </p>
+                               
+                            </div>
+                            
+                            <form method="POST" id="paymentForm">
+                                <div class="mb-3">
+                                    <label class="form-label">Phone Number</label>
+                                    <input type="tel" name="phone" class="form-control" placeholder="07XXXXXXXX" required>
+                                </div>
+                                
+                                                                    <div class="mb-3">
+                                        <label class="form-label">Amount (KES)</label>
+                                        <input type="number" name="amount" class="form-control" 
+                                               min="5.00" 
+                                                
+                                               step="0.01" required>
+                                        <div class="form-text">
+                                                                                            Enter amount (minimum: KES 5.00)
+                                                                                    </div>
+                                    </div>
+                                                                
+                                <button type="submit" class="btn btn-primary w-100" id="payButton">
+                                    Pay Now
+                                </button>
+
+ <div class="alert alert-info mt-2">
+                                    <small>
+                                        <i class="fas fa-info-circle"></i> 
+                                        Your payment will be processed securely.
+                                    </small>
+                                </div>
+
+
+                            </form>
+                            
+                            <div class="powered-by">
+                                <p>Powered by <strong>OptimaPay Payments</strong></p>
+                            </div>
+                                            </div>
+                </div>
+            </div>
+
+            <!-- Report Modal -->
+            <div class="modal fade" id="reportModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Report Payment Link</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <form method="POST">
+                            <div class="modal-body">
+                                <p>If you suspect this payment link is being used for fraudulent activities, please report it below.</p>
+                                <div class="mb-3">
+                                    <label class="form-label">Your Phone Number (Optional)</label>
+                                    <input type="text" name="reporter_phone" class="form-control" placeholder="07XXXXXXXX">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Reason for Reporting</label>
+                                    <textarea name="report_reason" class="form-control" rows="3" placeholder="Please describe why you are reporting this link..." required></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" name="report_link" class="btn btn-danger">Submit Report</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Removed the crashing mfilter script -->
-    <!-- <script type="application/javascript" src="https://safaricom-prod-api.mfilterit.org/_static/js/mfilter.safaricom.bundle.v0.js" ...></script> -->
-
-    <!-- Incapsula Script (Optional, keep if needed for their CDN) -->
-    <script type="text/javascript" src="/_Incapsula_Resource?SWJIYLWA=719d34d31c8e3a6e6fffd425f7e032f3&ns=1&cb=1364718792" async></script>
-</body>
-<footer class="text-center p-1 text-xs" style="background-color:#f9f9f9;color:#989898;">
-    <p>By Clicking on Subscribe, you agree to the terms and conditions:<br>
-    * Subscription will be automatically renewed.<br>
-    * No commitment, cancel anytime.<br>
-    * Charges added to monthly bill or prepaid credit.<br>
-    * Data Charges Apply.3</p>
-</footer>
-</html>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            <script>
+            // Automatic payment status checking
+            
+            // Handle form submission with feedback
+            document.getElementById('paymentForm')?.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const payButton = document.getElementById('payButton');
+                const originalText = payButton.innerHTML;
+                
+                payButton.disabled = true;
+                payButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+                
+                // Submit form data
+                const formData = new FormData(this);
+                
+                fetch('', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(html => {
+                    // Replace the current content with the response
+                    document.open();
+                    document.write(html);
+                    document.close();
+                })
+                .catch(error => {
+                    payButton.disabled = false;
+                    payButton.innerHTML = originalText;
+                    alert('An error occurred. Please try again.');
+                });
+            });
+            </script>
+        </body>
+        </html>
+        
